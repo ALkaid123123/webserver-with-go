@@ -11,27 +11,33 @@ type Context struct {
 	Request *http.Request
 	Path    string
 	Method  string
+	Params  map[string]string
 	Status  int
 }
 
-func NewContext(w http.ResponseWriter, r *http.Request) {
+func NewContext(w http.ResponseWriter, r *http.Request) *Context {
 	return &Context{
-		Writer: w,
-		Request:r,
-		Path:   r.URL.Path,
-		Method: r.Method,
-		Status: 0
+		Writer:  w,
+		Request: r,
+		Path:    r.URL.Path,
+		Method:  r.Method,
 	}
 }
 
 // 查询表单
-func (context *Context) GetForm(key string) {
+func (context *Context) GetForm(key string) string {
 	return context.Request.FormValue(key)
 }
 
 // 查询参数
-func (context *Context) GetQuery(key string) {
+func (context *Context) GetQuery(key string) string {
 	return context.Request.URL.Query().Get(key)
+}
+
+// 查询路由参数
+func (c *Context) Param(key string) string {
+	value, _ := c.Params[key]
+	return value
 }
 
 // 设置状态码
@@ -58,7 +64,7 @@ func (context *Context) Json(code int, obj interface{}) {
 	context.SetStatus(code)
 	encoder := json.NewEncoder(context.Writer)
 	if err := encoder.Encode(obj); err != nil {
-		http.Error(c.Writer, err.Error(), 500)
+		http.Error(context.Writer, err.Error(), 500)
 	}
 }
 

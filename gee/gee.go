@@ -4,6 +4,7 @@ import (
 	"net/http"
 )
 
+type H map[string]interface{}
 type HandlerFunc func(*Context)
 
 type Engine struct {
@@ -11,7 +12,7 @@ type Engine struct {
 }
 
 func New() *Engine {
-	return &Engine{router: newRouter()}
+	return &Engine{routers: NewRouter()}
 }
 
 func (engine *Engine) addRoute(method string, pattern string, handler HandlerFunc) {
@@ -32,5 +33,5 @@ func (engine *Engine) RUN(addr string) error {
 
 func (engine *Engine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	context := NewContext(w, r)
-	engine.routers.handle(c)
+	engine.routers.handle(context)
 }
