@@ -73,7 +73,7 @@ func (r *router) handle(c *Context) {
 		c.String(http.StatusNotFound, "404 NOT FOUND: %s\n", c.Path)
 	} else {
 		c.Params = params
-		key := c.Method + "-" + c.Path
+		key := c.Method + "-" + node.pattern
 		r.handlers[key](c)
 	}
 }

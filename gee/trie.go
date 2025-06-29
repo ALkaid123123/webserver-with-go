@@ -38,7 +38,8 @@ func (node *trie) insert(pattern string, parts []string, index int) {
 	ch := node.searchChild(part)
 	if ch == nil {
 		// fmt.Print(index)
-		node.children = append(node.children, &trie{pattern: pattern, part: part})
+		ch = &trie{pattern: pattern, part: part}
+		node.children = append(node.children, ch)
 	}
 	ch.insert(pattern, parts, index+1)
 }
