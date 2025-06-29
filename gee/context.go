@@ -76,6 +76,7 @@ func (context *Context) Data(code int, data []byte) {
 
 // 返回HTML文件
 func (context *Context) HTML(code int, html string) {
+	context.SetHeader("Content-Type", "text/html")
 	context.SetStatus(code)
 	context.Writer.Write([]byte(html))
 }
